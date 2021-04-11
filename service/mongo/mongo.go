@@ -10,13 +10,13 @@ type MongoService struct {
 }
 
 type NewMongoService interface {
-	Create(pokemon model.Pokemon) *model.Error
+	Create(pokemon model.PokemonMongo) *model.Error
 	Read() (*model.Pokemons, *model.Error)
 	Update(pokemon model.Pokemon, pokemonId int) *model.Error
 	Delete(pokemonId int) *model.Error
 }
 
-func (ms *MongoService) Create(pokemon model.Pokemon) *model.Error {
+func (ms *MongoService) Create(pokemon model.PokemonMongo) *model.Error {
 
 	err := ms.Create(pokemon)
 

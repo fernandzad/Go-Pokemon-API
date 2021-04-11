@@ -1,6 +1,10 @@
 package model
 
-import "time"
+import (
+	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 // Pokemon Type
 type Pokemon struct {
@@ -11,8 +15,16 @@ type Pokemon struct {
 	UpdatedAt time.Time `json:updated_at,omitempty`
 }
 
+type PokemonMongo struct {
+	ID        primitive.ObjectID `bson:"_id" json:ID,omitempty`
+	Name      string             `json:Name,omitempty`
+	URL       string             `json:Url,omitempty`
+	CreatedAt time.Time          `json:created_at`
+	UpdatedAt time.Time          `json:updated_at,omitempty`
+}
+
 // Pokemons pokemons list
-type Pokemons []Pokemon
+type Pokemons []PokemonMongo
 
 type SinglePokeExternal struct {
 	Name string `json:name,omitempty`
