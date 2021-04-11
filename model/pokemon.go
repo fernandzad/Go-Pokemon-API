@@ -1,11 +1,18 @@
 package model
 
+import "time"
+
 // Pokemon Type
 type Pokemon struct {
-	ID   int    `json:ID,omitempty`
-	Name string `json:Name,omitempty`
-	URL  string `json:Url,omitempty`
+	ID        int       `json:ID,omitempty`
+	Name      string    `json:Name,omitempty`
+	URL       string    `json:Url,omitempty`
+	CreatedAt time.Time `json:created_at`
+	UpdatedAt time.Time `json:updated_at,omitempty`
 }
+
+// Pokemons pokemons list
+type Pokemons []Pokemon
 
 type SinglePokeExternal struct {
 	Name string `json:name,omitempty`
