@@ -12,8 +12,8 @@ type MongoService struct {
 type NewMongoService interface {
 	Create(pokemon model.PokemonMongo) *model.Error
 	Read() (*model.Pokemons, *model.Error)
-	Update(pokemon model.Pokemon, pokemonId int) *model.Error
-	Delete(pokemonId int) *model.Error
+	Update(pokemon model.PokemonMongo, pokemonId string) *model.Error
+	Delete(pokemonId string) *model.Error
 }
 
 func (ms *MongoService) Create(pokemon model.PokemonMongo) *model.Error {
@@ -42,7 +42,7 @@ func (ms *MongoService) Read() (*model.Pokemons, *model.Error) {
 	return pokemons, nil
 }
 
-func (ms *MongoService) Update(pokemon model.Pokemon, pokemonId int) *model.Error {
+func (ms *MongoService) Update(pokemon model.PokemonMongo, pokemonId string) *model.Error {
 	err := ms.Update(pokemon, pokemonId)
 
 	if err != nil {
@@ -54,7 +54,7 @@ func (ms *MongoService) Update(pokemon model.Pokemon, pokemonId int) *model.Erro
 	return nil
 }
 
-func (ms *MongoService) Delete(pokemonId int) *model.Error {
+func (ms *MongoService) Delete(pokemonId string) *model.Error {
 
 	err := ms.Delete(pokemonId)
 

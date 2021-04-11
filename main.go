@@ -44,10 +44,40 @@ func readPokemons() {
 	fmt.Println(*pokemons)
 }
 
+func updatePokemon() {
+	pokemonRepository := repositories.New()
+	id := "60725516a48879e027760072"
+
+	pokemon := model.PokemonMongo{
+		Name: "Charizard",
+		URL:  "https://pokeapi.co/api/v2/pokemon/6/",
+	}
+
+	err := pokemonRepository.Update(pokemon, id)
+
+	if err != nil {
+		fmt.Print(err.Message)
+	}
+}
+
+func deletePokemon() {
+	pokemonRepository := repositories.New()
+	id := "6072578fca89d45ecac4fad8"
+
+	err := pokemonRepository.Delete(id)
+
+	if err != nil {
+		fmt.Print(err.Message)
+	}
+}
+
 func main() {
 
 	// insertPokemon()
-	readPokemons()
+	// updatePokemon()
+	// readPokemons()
+	// deletePokemon()
+	// readPokemons()
 
 	csvService := csvservice.New()
 	httpService := httpservice.New()

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"pokeapi/database"
 	"pokeapi/model"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -15,7 +16,7 @@ type PokemonRepository struct{}
 type NewMongoRepository interface {
 	Create(pokemon model.PokemonMongo) *model.Error
 	Read() (*model.Pokemons, *model.Error)
-	Update(pokemon model.Pokemon, pokemonId int) *model.Error
+	Update(pokemon model.Pokemon, pokemonId string) *model.Error
 	Delete(pokemonId int) *model.Error
 }
 
@@ -75,10 +76,50 @@ func (r *PokemonRepository) Read() (*model.Pokemons, *model.Error) {
 	return &pokemons, nil
 }
 
-func (r *PokemonRepository) Update(pokemon model.Pokemon, pokemonId int) *model.Error {
+func (r *PokemonRepository) Update(pokemon model.PokemonMongo, pokemonId string) *model.Error {
+	var collectionName string = "pokemon"
+	var collection = database.GetCollection(collectionName)
+	var ctx = context.Background()
+
+	oid, _ := primitive.ObjectIDFromHex(pokemonId)
+
+	filter := bson.M{"_id": oid}
+
+	update := bson.M{
+		"$set": bson.M{
+			"name":       pokemon.Name,
+			"url":        pokemon.URL,
+			"updated_at": time.Now(),
+		},
+	}
+
+	_, err := collection.UpdateOne(ctx, filter, update)
+
+	if err != nil {
+		return &model.Error{
+			Message: err.Error(),
+		}
+	}
+
 	return nil
 }
 
-func (r *PokemonRepository) Delete(pokemonId int) *model.Error {
+func (r *PokemonRepository) Delete(pokemonId string) *model.Error {
+	var collectionName string = "pokemon"
+	var collection = database.GetCollection(collectionName)
+	var ctx = context.Background()
+
+	oid, _ := primitive.ObjectIDFromHex(pokemonId)
+
+	filter := bson.M{"_id": oid}
+
+	_, err := collection.DeleteOne(ctx, filter)
+
+	if err != nil {
+		return &model.Error{
+			Message: err.Error(),
+		}
+	}
+
 	return nil
 }
