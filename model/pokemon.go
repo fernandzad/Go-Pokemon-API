@@ -19,8 +19,8 @@ type PokemonMongo struct {
 	ID        primitive.ObjectID `bson:"_id" json:ID,omitempty`
 	Name      string             `json:Name,omitempty`
 	URL       string             `json:Url,omitempty`
-	CreatedAt time.Time          `json:created_at`
-	UpdatedAt time.Time          `json:updated_at,omitempty`
+	CreatedAt time.Time          `bson:"created_at" json:created_at`
+	UpdatedAt time.Time          `bson:"updated_at" json:updated_at,omitempty`
 }
 
 // Pokemons pokemons list

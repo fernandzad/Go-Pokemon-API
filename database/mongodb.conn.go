@@ -41,7 +41,3 @@ func GetCollection(collection string) *mongo.Collection {
 
 	return client.Database(database).Collection(collection)
 }
-
-// func GetCollection(collection string) *mongo.Collection {
-
-// }

@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"pokeapi/database"
 	"pokeapi/model"
+
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type PokemonRepository struct{}
@@ -16,15 +19,18 @@ type NewMongoRepository interface {
 	Delete(pokemonId int) *model.Error
 }
 
-var collectionName string = "pokemon"
-var collection = database.GetCollection(collectionName)
-var ctx = context.Background()
-
 func New() *PokemonRepository {
 	return &PokemonRepository{}
 }
 
 func (r *PokemonRepository) Create(pokemon model.PokemonMongo) *model.Error {
+
+	var collectionName string = "pokemon"
+	var collection = database.GetCollection(collectionName)
+	var ctx = context.Background()
+
+	id := primitive.NewObjectID()
+	pokemon.ID = id
 
 	_, err := collection.InsertOne(ctx, pokemon)
 
@@ -39,7 +45,34 @@ func (r *PokemonRepository) Create(pokemon model.PokemonMongo) *model.Error {
 }
 
 func (r *PokemonRepository) Read() (*model.Pokemons, *model.Error) {
-	return nil, nil
+	var pokemons model.Pokemons
+	var collectionName string = "pokemon"
+	var collection = database.GetCollection(collectionName)
+	var ctx = context.Background()
+
+	filter := bson.D{}
+	cur, err := collection.Find(ctx, filter)
+
+	if err != nil {
+		return nil, &model.Error{
+			Message: err.Error(),
+		}
+	}
+
+	for cur.Next(ctx) {
+		var pokemon model.PokemonMongo
+		err := cur.Decode(&pokemon)
+
+		if err != nil {
+			return nil, &model.Error{
+				Message: err.Error(),
+			}
+		}
+
+		pokemons = append(pokemons, pokemon)
+	}
+
+	return &pokemons, nil
 }
 
 func (r *PokemonRepository) Update(pokemon model.Pokemon, pokemonId int) *model.Error {
